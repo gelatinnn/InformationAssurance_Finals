@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <!-- Include Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        /* General styling for the entire page */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('static/green.png') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Main wrapper for the dashboard and profile card */
+        .main-container {
+            display: flex;
+            justify-content: flex-start; /* Ensure everything aligns to the left */
+            width: 90%;
+            margin-top: 40px;
+            gap: 30px;
+            padding-left: 50px;
+        }
+
+        /* Dashboard section */
+        .dashboard-container {
+            width: 75%; /* Expanding the dashboard section */
+        }
+
+        /* Profile section */
+        .profile-container {
+    width: 25%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    padding: 30px;
+    border-radius: 10px;
+    
+    position: relative;
+    backdrop-filter: blur(8px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(8px); /* For Safari support */
+}
+
+
+        .profile-card {
+            background-color: rgba(52, 149, 109, 0.7); /* Red with 70% transparency */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* Style for the individual profile info items (with icons) */
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.info-item i {
+    font-size: 20px; /* Icon size */
+    color: white; /* Icon color */
+}
+
+/* Styling for input fields */
+.profile-info input {
+    background-color: rgba(255, 255, 255, 0.3); /* Slightly transparent background */
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    color: rgb(82, 57, 57);
+    width: 100%;
+}
+
+/* Buttons Styling */
+.profile-info button {
+    background-color: rgba(0, 123, 255, 0.7);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-info button:hover {
+    background-color: rgba(0, 123, 255, 1);
+}
+
+/* Styling for the file upload section */
+.custom-file-upload label {
+    background-color: rgba(0, 123, 255, 0.7);
+    padding: 8px 16px;
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-file-upload label:hover {
+    background-color: rgba(0, 123, 255, 1);
+}
+
+/* File name display */
+#fileName {
+    color: white;
+    font-size: 14px;
+}
+        .profile-card img {
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border: 5px solid #000000;
+            cursor: pointer;
+        }
+
+        .profile-info {
+            width: 100%;
+            text-align: left;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #471e02;
+        }
+
+        .profile-info p {
+            font-size: 1.2rem;
+            color: #000000;
+            margin: 10px 0;
+        }
+
+        .profile-info input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #070707;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .profile-info button {
+    background-color: #388e3c;
+    color: rgb(239, 224, 224);
+    padding: 12px;
+    border-radius: 0;
+    border: 2px solid #4e7c47;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    font-size: 1.2rem;
+    text-align: center;
+    display: block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.profile-info button:hover {
+    background-color: #388e3c;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+
+        
+
+        /* Avatar upload input */
+        .profile-info input[type="file"] {
+            width: 100%;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+          /* Profile Card Styles */
+    .profile-card.edit-mode {
+        background-color: #57a386;
+        border: 2px solid #6a905a;
+        padding: 20px;
+        transform: scale(1.05); /* Slight zoom effect */
+        transition: all 0.3s ease;
+    }
+
+    .profile-card.edit-mode h2 {
+        color: #0b0b0b;
+    }
+
+    .profile-card.edit-mode input {
+        border-color: #6a905a;
+        background: #eef7ee;
+    }
+
+        /* Header styling */
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styling for the top-left section */
+        .expense-logger {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: left;
+            margin-left: 20px;
+            margin-top: 20px;
+            color: #024720;
+        }
+
+        /* Transaction form styling */
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        form input,
+        form select,
+        form button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #0d0d0d;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        form button {
+            background: #6a905a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 20%;
+            margin: 0 auto;
+        }
+
+        /* Table styling for transaction history */
+        .transactions-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: #fbfbfb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .transactions-table th {
+            background: linear-gradient(135deg, #88d268, #6a905a);
+            color: white;
+            padding: 15px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .transactions-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Container for the charts */
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chart {
+            width: 45%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Flash message styling */
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        /* General button styling */
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .profile-card img#avatar {
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-card img#avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.custom-file-upload {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.upload-label {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: rgba(170, 183, 198, 0.5); /* Adjust the alpha value for transparency */
+    color: rgb(19, 18, 18);
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.upload-label:hover {
+    background-color: rgba(145, 163, 182, 0.7); /* Slightly less transparent on hover */
+}
+
+        /* Button hover effect */
+        .btn:hover {
+            background-color: #45a049;
+        }
+        #greeting {
+    text-align: center;
+    width: 100%;
+}
+
+
+        /* Responsive styling for the button */
+        @media screen and (max-width: 768px) {
+            .btn {
+                width: 100%;  /* Make the button fill the width on smaller screens */
+                padding: 15px 0;  /* Increase the padding for better touch accessibility */
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .btn {
+                font-size: 18px; /* Larger font size on very small screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    
+    <!-- Main Wrapper for Dashboard and Profile -->
+    <div class="main-container">
+        <!-- Dashboard Section -->
+        <div class="dashboard-container">
+            <h1>Expense and Income Logger</h1>
+
+            <!-- Transaction Form -->
+            <h2>Add Transaction</h2>
+            <form id="transactionForm">
+                <input type="text" id="description" placeholder="Description" required>
+                <input type="number" step="0.01" id="amount" placeholder="Amount" required>
+                <select id="type" required>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+                <button type="submit">Log Transaction</button>
+            </form>
+
+            <!-- Transaction Table -->
+            <h2>Transactions History</h2>
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-list">
+                    <!-- Transactions will be dynamically inserted here -->
+                </tbody>
+            </table>
+
+            <!-- Chart Containers -->
+            <div class="chart-container">
+                <div class="chart">
+                    <h2>Income</h2>
+                    <canvas id="incomeChart"></canvas>
+                </div>
+                <div class="chart">
+                    <h2>Expense</h2>
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-container">
+           <!-- Profile Card -->
+<div class="profile-card" id="profileCard">
+    <!-- Profile Picture -->
+    <img src="{{ profile_picture or 'https://www.w3schools.com/w3images/avatar2.png' }}" alt="User Avatar" id="avatar" onclick="document.getElementById('fileInput').click()">
+    
+    <!-- Profile Info -->
+    <div class="profile-info">
+        <h2 id="greeting">Hello, {{ user.firstname }}!</h2>
+
+        <!-- Full Name -->
+        <div class="info-item">
+            <i class="fas fa-user"></i> <!-- Icon for Full Name -->
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" value="{{ user.firstname }} {{ user.lastname }}" disabled>
+        </div>
+
+        <!-- Email -->
+        <div class="info-item">
+            <i class="fas fa-envelope"></i> <!-- Icon for Email -->
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="{{ user.email }}" disabled>
+        </div>
+
+        <!-- Birthday -->
+        <div class="info-item">
+            <i class="fas fa-calendar-alt"></i> <!-- Icon for Birthday -->
+            <label for="birthday">Birthday:</label>
+            <input type="date" id="birthday" value="{{ user.birthday }}" disabled>
+        </div>
+
+        <!-- Address -->
+        <div class="info-item">
+            <i class="fas fa-home"></i> <!-- Icon for Address -->
+            <label for="address">Address:</label>
+            <input type="text" id="address" value="{{ user.address }}" disabled>
+        </div>
+
+        <!-- Contact Number -->
+        <div class="info-item">
+            <i class="fas fa-phone"></i> <!-- Icon for Phone -->
+            <label for="phone">Contact Number:</label>
+            <input type="text" id="phone" value="{{ user.contact_number }}" disabled>
+        </div>
+
+        <!-- Change Avatar Section -->
+        <div class="custom-file-upload">
+            <label for="fileInput" class="upload-label">
+                <i class="fas fa-upload"></i> Choose file
+            </label>
+            <span id="fileName">No file chosen</span>
+            <input type="file" id="fileInput" style="display: none;" onchange="previewImage(event)">
+        </div>
+
+        <!-- Edit and Save Profile Buttons -->
+        <button id="editProfileBtn">
+            <i class="fas fa-edit"></i> Edit Profile
+        </button>
+        <button id="saveProfileBtn" style="display:none;">
+            <i class="fas fa-save"></i> Save Changes
+        </button>
+
+        <!-- Sign Out Button -->
+        <button id="signOutBtn" class="btn" onclick="signOut()">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+    </div>
+</div>
+
+
+    <script>
+        // Mock user data
+const user = {
+    profile_picture: "https://www.w3schools.com/w3images/avatar2.png", // Default profile picture
+    username: "",
+    firstname: "",
+    email: "",
+    birthday: "",
+    address: "",
+    contact_number: "",
+};
+
+// Mock data for charts
+let transactions = [];
+let incomeData = [];
+let expenseData = [];
+let incomeTotal = 0;
+let expenseTotal = 0;
+
+// Update profile function
+function updateProfile() {
+    document.getElementById('username').innerText = user.username;
+    document.getElementById('firstname').value = user.firstname;
+    document.getElementById('email').value = user.email;
+    document.getElementById('birthday').value = user.birthday;
+    document.getElementById('address').value = user.address;
+    document.getElementById('contact_number').value = user.contact_number;
+    document.getElementById('avatar').src = user.profile_picture;
+}
+
+// Handle avatar change
+function previewImage(event) {
+    const fileInput = event.target;
+    const fileNameSpan = document.getElementById('fileName');
+    const avatar = document.getElementById('avatar');
+
+    // Update the file name display
+    const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file chosen";
+    fileNameSpan.textContent = fileName;
+
+    // Preview the image if a file is selected
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            avatar.src = e.target.result;
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+
+// Trigger the file input click when the avatar image is clicked
+document.getElementById('avatar').addEventListener('click', function() {
+    document.getElementById('fileInput').click(); // Trigger the file input
+});
+document.getElementById('editProfileBtn').addEventListener('click', () => {
+    const profileCard = document.getElementById('profileCard');
+
+    // Enable input fields
+    document.getElementById('name').disabled = false;
+    document.getElementById('email').disabled = false;
+    document.getElementById('birthday').disabled = false;
+    document.getElementById('address').disabled = false;
+    document.getElementById('phone').disabled = false;
+
+    // Switch layout to edit mode
+    profileCard.classList.add('edit-mode');
+
+    // Show Save button and hide Edit button
+    document.getElementById('saveProfileBtn').style.display = 'inline-block';
+    document.getElementById('editProfileBtn').style.display = 'none';
+});
+
+// Save Changes and Reset Layout
+document.getElementById('saveProfileBtn').addEventListener('click', () => {
+    const profileCard = document.getElementById('profileCard');
+
+    // Disable input fields
+    document.getElementById('name').disabled = true;
+    document.getElementById('email').disabled = true;
+    document.getElementById('birthday').disabled = true;
+    document.getElementById('address').disabled = true;
+    document.getElementById('phone').disabled = true;
+
+    // Exit edit mode
+    profileCard.classList.remove('edit-mode');
+
+    // Show Edit button and hide Save button
+    document.getElementById('saveProfileBtn').style.display = 'none';
+    document.getElementById('editProfileBtn').style.display = 'inline-block';
+
+    // Optionally update user data here (e.g., send to backend or update global `user` object)
+});
+
+// Sign out function
+function signOut() {
+    window.location.href = "/logout";
+}
+
+// Transaction form submission
+document.getElementById("transactionForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const description = document.getElementById("description").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+    const type = document.getElementById("type").value;
+    const date = new Date().toLocaleDateString();
+
+    transactions.push({ description, amount, type, date });
+
+    if (type === "income") {
+        incomeTotal += amount;
+    } else {
+        expenseTotal += amount;
+    }
+
+    // Update the table and chart
+    updateTransactionsTable();
+    updateCharts();
+    resetForm();
+});
+
+// Update the transactions table
+function updateTransactionsTable() {
+    const tableBody = document.getElementById("transactions-list");
+    tableBody.innerHTML = "";
+
+    transactions.forEach((transaction) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${transaction.description}</td>
+            <td>${transaction.amount}</td>
+            <td>${transaction.type}</td>
+            <td>${transaction.date}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Update the charts
+function updateCharts() {
+    const incomeChart = new Chart(document.getElementById("incomeChart"), {
+        type: "bar",
+        data: {
+            labels: ["Income"],
+            datasets: [
+                {
+                    label: "Total Income",
+                    data: [incomeTotal],
+                    backgroundColor: "rgba(76, 175, 80, 0.6)",
+                    borderColor: "rgba(76, 175, 80, 1)",
+                    borderWidth: 1,
+                },
+            ],
+        },
+    });
+
+    const expenseChart = new Chart(document.getElementById("expenseChart"), {
+        type: "bar",
+        data: {
+            labels: ["Expense"],
+            datasets: [
+                {
+                    label: "Total Expense",
+                    data: [expenseTotal],
+                    backgroundColor: "rgba(244, 67, 54, 0.6)",
+                    borderColor: "rgba(244, 67, 54, 1)",
+                    borderWidth: 1,
+                },
+            ],
+        },
+    });
+}
+
+// Reset the form after submission
+function resetForm() {
+    document.getElementById("description").value = "";
+    document.getElementById("amount").value = "";
+    document.getElementById("type").value = "income";
+}
+    </script>
+
+</body>
+
+</html>
